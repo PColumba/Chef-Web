@@ -6,7 +6,6 @@ function register(){
     const password = document.getElementById("loginForm").elements[1].value;
    
     firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
-      // Handle Errors here.
       alert("Ups something went wrong: " + error.message);
     });
 }
@@ -17,7 +16,6 @@ function signIn(){
     const password = document.getElementById("loginForm").elements[1].value;
     
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-      // Handle Errors here.
       alert("Ups something went wrong: " + error.message);
     });
 }
