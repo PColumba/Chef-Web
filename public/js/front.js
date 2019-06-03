@@ -1,25 +1,27 @@
 
-var ingredientsListHolder;
-var ingredientsInputField;
-
 function ingredient(value){
     return "<span class=\"badge badge-primary\" style=\"margin-right: 5px;\">" + value + "  " + 
             "<i class=\"fas fa-times\" onclick=\"removeIngredient(this)\"></i></span>";
 }
 
-window.onload = function() {
+//Not critical, not working with external templates
+/*(function() {
+    console.log('I was triggered');
     ingredientsListHolder = document.getElementById("ingredients-list");
     document.getElementById("ingredients-add").addEventListener("keydown",addIngredientWithEnter);
-};
+})();*/
 
 function addIngredient(){
+    const ingredientsListHolder = document.getElementById("ingredients-list");
     const inputValue = document.getElementById("ingredients-add").value;
     if(inputValue === "")
         return;
-    window.ingredientsListHolder.innerHTML += ingredient(inputValue);    
+    ingredientsListHolder.innerHTML += ingredient(inputValue);    
 }
 
-function addIngredientWithEnter(ev){
+
+//Not critical, not working with external templates
+/*function addIngredientWithEnter(ev){
     const keyPressed = ev.key;
     if(keyPressed === "Enter"){
         const inputValue = document.getElementById("ingredients-add").value;
@@ -29,7 +31,7 @@ function addIngredientWithEnter(ev){
     else{
         return;
     }
-}
+}*/
 
 function removeIngredient(ingredient){
     ingredient.parentElement.remove();
