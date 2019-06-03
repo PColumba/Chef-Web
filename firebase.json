@@ -1,16 +1,28 @@
 {
   "hosting": {
-    "public": "public",        
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/login.html"
-      }
+    "rewrites": [{
+      "source": "/",
+      "destination": "/login.html"        
+    }],
+    "redirects": [{
+      "source": "/search",
+      "destination": "/login.html"          
+    },{
+      "source": "/recipe-details",
+      "destination": "/login.html"          
+    }
+    ,{
+      "source": "/recipes-list",
+      "destination": "/login.html"          
+    }
     ]
+    
+    
   }
 }
