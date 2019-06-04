@@ -6,23 +6,18 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [{
-      "source": "/",
-      "destination": "/login.html"        
-    }],
     "redirects": [{
       "source": "/search",
       "destination": "/login.html"          
     },{
       "source": "/recipe-details",
       "destination": "/login.html"          
-    }
-    ,{
-      "source": "/recipes-list",
+    },{
+      "source": "/recipes",
       "destination": "/login.html"          
-    }
-    ]
-    
-    
+    },{
+      "source": "/",
+      "destination": "/login.html"         
+    }]
   }
 }
