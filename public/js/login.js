@@ -29,9 +29,17 @@ firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     $('#user-info').text(user.email);
   } else {
-   ;
+    $('#user-info').text("Not logged in");
   }
-});
+})
+
+function signOut(){
+    firebase.auth().signOut();
+}
+
+
+
+
 
 
 

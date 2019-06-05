@@ -11,7 +11,7 @@ class Recipe{
         this.label = label;
         this.imageURL = imageURL;
         this.sourceURL = sourceURL;
-        this.ingredients = ingredients;
+        this.ingredientsList = ingredients;
     } 
 }
 
@@ -101,21 +101,22 @@ window.addEventListener('load', () => {
     router.add('/recipe-details', () => {
         recipesListContent.hide();
         let context = {label: recipesList[pickedIndex-1].label, sourceURL: recipesList[pickedIndex-1].sourceURL,
-        imageURL: recipesList[pickedIndex-1].imageURL, ingredients: recipesList[pickedIndex-1].ingredients};
+        imageURL: recipesList[pickedIndex-1].imageURL, ingredients: recipesList[pickedIndex-1].ingredientsList};
         recipeDetailedContent.html(recipeDetailsView(context)).show();
-        
+        recipeDetailedContent.find('#add-to-favorites').on('click', function(){addToFavorites(recipesList[pickedIndex-1])})
         //code here
     });
 
-// Navigate app to current url
+    //Navigate app to current url
     router.navigateTo(window.location.pathname);
 
     // Highlight Active Menu on Refresh/Page Reload
     const link = $(`a[href$='${window.location.pathname}']`);
     link.addClass('active');
     
-    $('a').on('click', aOverride);
-    
+    //add link overrides
+    navigationContainer.find('#login-navigation').on('click', aOverride);
+    navigationContainer.find('#search-navigation').on('click', aOverride);
     
 });
 
