@@ -20,7 +20,7 @@
                     <div class="dropdown">
                         <a class="nav-link text-white dropdown-toggle" data-toggle="dropdown" id="user-info">User info</a>
                         <div class="dropdown-menu" style="right: 0px; left:auto;">
-                            <a class="dropdown-item" href="#">Sign out</a>
+                            <a class="dropdown-item" href="#" onclick="signOut()">Sign out</a>
                             <a class="dropdown-item" href="#">Show favorites</a>
                         </div>
                     </div> 
@@ -79,6 +79,7 @@
         <script src="js/app.js" type="text/javascript"></script>
         <script src="js/login.js" type="text/javascript"></script>
         <script src="js/front.js" type="text/javascript"></script> 
+        <script src="js/favorites.js" type="text/javascript"></script> 
 
         <!-- Handle Bar templates -->
 
@@ -146,7 +147,7 @@
                 {{/each}}
             </ul>           
             <a href="{{sourceURL}}" style="font-size: 20px">Preparation details</a>
-            <i class="fas fa-heart fa-2x ml-3" style="color: crimson" data-toggle="tooltip" title="Add to favorites"></i>
+            <i id="add-to-favorites" class="fas fa-heart fa-2x ml-3" style="color: crimson" data-toggle="tooltip" title="Add to favorites" ></i>
             </div>
             </div> 
         </script>
