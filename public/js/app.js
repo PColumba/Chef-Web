@@ -110,6 +110,8 @@ window.addEventListener('load', () => {
 
     router.add('/recipes', () => {
         
+        console.log(ingredientsList);
+        
         //clean recipesList
         recipesList = [];
         
@@ -185,7 +187,6 @@ function ingredient(value){
     return "<span class=\"badge badge-primary\" style=\"margin-right: 5px;\">" + value + "  " + 
             "<i class=\"fas fa-times\" onclick=\"removeIngredient(this)\"></i></span>";
 }
-
 //Not critical, not working with external templates
 /*(function() {
     console.log('I was triggered');
@@ -203,18 +204,18 @@ function addIngredient(){
 }
 
 
-//Not critical, not working with external templates
-/*function addIngredientWithEnter(ev){
+function addIngredientWithEnter(ev){
     const keyPressed = ev.key;
     if(keyPressed === "Enter"){
-        const inputValue = document.getElementById("ingredients-add").value;
-        window.ingredientsListHolder.innerHTML += ingredient(inputValue);  
+        const inputValue = $("#ingredients-add").val();
+        $('#ingredients-list').append(ingredient(inputValue))
+        ingredientsList.push(inputValue);
         ev.preventDefault();
     }
     else{
         return;
     }
-}*/
+}
 
 function removeIngredient(ingredient){
     let index = $(ingredient.parentElement).index();
