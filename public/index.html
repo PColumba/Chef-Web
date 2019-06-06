@@ -43,9 +43,9 @@
                     <label for="pwd">Password:</label>
                     <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd">
                 </div>
-                <button type="button" class="btn btn-primary" onclick="register()">Register</button>
-                <button type="button" class="btn btn-primary" onclick="signIn()">Sign In</button>
-                <button type="button" class="btn btn-primary" onclick="signInWithFacebook()" id="facebook-button">
+                <button type="button" class="btn btn-primary mb-2" onclick="register()">Register</button>
+                <button type="button" class="btn btn-primary mb-2" onclick="signIn()">Sign In</button>
+                <button type="button" class="btn btn-primary mb-2" onclick="signInWithFacebook()" id="facebook-button">
                     <i class="fab fa-facebook-f"></i>
                     Sign in with facebook</button>
             </form>
@@ -182,7 +182,7 @@
                 <li class="list-group-item">{{this}}</li>
                 {{/each}}
             </ul>           
-            <a href="{{sourceURL}}" class="preparation-link">Preparation details</a>
+            <a href="{{sourceURL}}" class="preparation-link" target="_blank">Preparation details</a>
             <i id="add-to-favorites" class="fas fa-heart fa-2x ml-3" data-toggle="tooltip" title="Add to favorites" ></i>
             </div>
             </div> 
