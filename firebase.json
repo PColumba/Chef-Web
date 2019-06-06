@@ -2,28 +2,12 @@
   "hosting": {
     "public": "public",
     "ignore": [
-      "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
-    "redirects": [{
-      "source": "/search",
-      "destination": "/login.html"          
-    },{
-      "source": "/recipe-details",
-      "destination": "/login.html"          
-    },{
-      "source": "/recipes",
-      "destination": "/login.html"          
-    },{
-      "source": "/",
-      "destination": "/login.html"         
-    },{
-      "source": "/favorites",
-      "destination": "/login.html"         
-    },{
-      "source": "/back",
-      "destination": "/login.html"         
-    }]
+	"rewrites":[{
+	  "source": "**",
+	  "destination": "/index.html"
+	}]
   }
 }

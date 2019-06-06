@@ -32,27 +32,21 @@ function encodeQueryData(data){
 }
 
 const router = new Router({
-        mode: 'history'
+    mode: 'history'
 });
 
 window.addEventListener('load', () => {
-    const loginContent = $('#login-content');
-    const searchContent = $('#search-content');
-    const recipesListContent = $('#recipes-list-content');
-    const recipeDetailedContent = $('#recipe-detailed-content');
-    const navigationContainer = $('#navigation-container');
+    const contentContainer = $('#content-container');
+    const loginView = Handlebars.compile($('#login').html());
     const searchView = Handlebars.compile($('#search').html());
     const recipesListView = Handlebars.compile($('#recipes-list').html());
     const favoritesListView = Handlebars.compile($('#recipes-favorites').html());
     const recipesListItem = Handlebars.compile($('#recipes-list-item').html());
     const recipeDetailsView = Handlebars.compile($('#recipe-details').html());
     
-    
     router.add('/login.html', () => {
-        searchContent.hide();
-        loginContent.show();
-        navigationContainer.find('#search-navigation').hide();
-        navigationContainer.find('#login-navigation').show(); 
+        contentContainer.html(loginView());
+        contentContainer.find('a').on('click',aOverride);
         historyArr.push('/login.html')
     });
     
@@ -65,10 +59,12 @@ window.addEventListener('load', () => {
     })
     
     router.add('/search', () => { 
-        navigationContainer.find('#login-navigation').hide();
-        navigationContainer.find('#search-navigation').show();
-        loginContent.hide(); 
-        searchContent.html(searchView()).show();
+        //clear ingredients list array
+        ingredientsList = []
+        
+        contentContainer.html(searchView()).show();
+        contentContainer.find('a').on('click',aOverride);
+        contentContainer.find("input[type='number']").inputSpinner()
         historyArr.push('/search');
     });
     
@@ -81,11 +77,7 @@ window.addEventListener('load', () => {
             return;
         }   
         
-        navigationContainer.hide();
-        loginContent.hide();
-        searchContent.hide();
-        recipeDetailedContent.hide();
-        recipesListContent.html(favoritesListView());
+        contentContainer.html(favoritesListView());
 
         var db = firebase.firestore();
         db.collection("users").doc(currUser.uid).get().then((ds) => {
@@ -94,12 +86,12 @@ window.addEventListener('load', () => {
                 favoritesList.forEach((recipe) => {
                     let context = {label: recipe.label, imageURL: recipe.imageURL};
                     let html = recipesListItem(context);
-                    recipesListContent.append(html);
+                    contentContainer.append(html);
                 })
                 recipesList = favoritesList;
-                recipesListContent.find('a').on('click', aOverrideRecipe);
+                contentContainer.find('a').on('click', aOverrideRecipe);
             } else{
-                recipesListContent.append("<p class=\"mt-3 text-center\">You do not have any favorite recipes</p>");
+                contentContainer.append("<p class=\"mt-3 text-center\">You do not have any favorite recipes</p>");
             }
         }).catch((error) => {
             alert("Upps Something went wrong: " + error);
@@ -108,6 +100,9 @@ window.addEventListener('load', () => {
     });
 
     router.add('/recipes', () => {
+        
+        //clean recipesList
+        recipesList = [];
         
         const q = ingredientsList.join(',');
         const ingredientsLimitSpinner = $('#ingredients-limit');
@@ -124,7 +119,8 @@ window.addEventListener('load', () => {
             
         let searchURL = baseURL + encodeQueryData(urlParams);
     
-        recipesListContent.html(recipesListView());
+        contentContainer.html(recipesListView());
+        
        
         let xmlhttp = new XMLHttpRequest();
 
@@ -144,25 +140,21 @@ window.addEventListener('load', () => {
                     recipesList.push(new Recipe(label, imageURL, sourceURL, ingredients));
                     let context = {label: label,imageURL: imageURL};
                     let html = recipesListItem(context);
-                    recipesListContent.append(html);
+                    contentContainer.append(html);
                 })
-                recipesListContent.find('a').on('click', aOverrideRecipe);
+                contentContainer.find('a').on('click', aOverrideRecipe);
+                historyArr.push('/recipes');
             }    
         };
         xmlhttp.open('GET',searchURL,true);
         xmlhttp.send();  
-        
-        searchContent.hide();
-        navigationContainer.find('#search-navigation').hide();
-        historyArr.push('/recipes');
     });
 
     router.add('/recipe-details', () => {
-        recipesListContent.hide();
         let context = {label: recipesList[pickedIndex-1].label, sourceURL: recipesList[pickedIndex-1].sourceURL,
         imageURL: recipesList[pickedIndex-1].imageURL, ingredients: recipesList[pickedIndex-1].ingredientsList};
-        recipeDetailedContent.html(recipeDetailsView(context)).show();
-        recipeDetailedContent.find('#add-to-favorites').on('click', function(){addToFavorites(recipesList[pickedIndex-1])})
+        contentContainer.html(recipeDetailsView(context)).show();
+        contentContainer.find('#add-to-favorites').on('click', function(){addToFavorites(recipesList[pickedIndex-1])})
         historyArr.push('/recipes-details');
         //code here
     });
@@ -171,14 +163,13 @@ window.addEventListener('load', () => {
     router.navigateTo(window.location.pathname);
 
     // Highlight Active Menu on Refresh/Page Reload
-    const link = $(`a[href$='${window.location.pathname}']`);
-    link.addClass('active');
+    //const link = $(`a[href$='${window.location.pathname}']`);
+    //link.addClass('active');
     
-    //add link overrides
-    navigationContainer.find('#login-navigation').on('click', aOverride);
-    navigationContainer.find('#search-navigation').on('click', aOverride);
+    //add link overrides to navbar
     $('#back-button').on('click', aOverride);
     $('#show-favorites').on('click', aOverride);
+    $('#sign-in').on('click',aOverride);
 });
 
 function ingredient(value){

@@ -23,6 +23,7 @@
                     <div class="dropdown">
                         <a class="nav-link text-white dropdown-toggle" data-toggle="dropdown" id="user-info">Not logged in</a>
                         <div class="dropdown-menu" style="right: 0px; left:auto;">
+                            <a class="dropdown-item" href="/login.html" id="sign-in">Sign in</a>
                             <a class="dropdown-item" href="#" onclick="signOut()">Sign out</a>
                             <a class="dropdown-item" href="/favorites" id="show-favorites">Show favorites</a>
                         </div>
@@ -31,7 +32,7 @@
             </ul>
         </nav><br>
 
-        <div class="container" id="login-content">
+        <div class="container mt-3 mb-3" id="content-container">
             <h2 class="text-center">Chef - discover your taste!</h2><br>
             <form id="loginForm" action="search.html">
                 <div class="form-group">
@@ -47,29 +48,17 @@
                 <button type="button" class="btn btn-primary" onclick="signInWithFacebook()" id="facebook-button">
                     <i class="fab fa-facebook-f"></i>
                     Sign in with facebook</button>
-            </form> 
-        </div>
-        <div class="container" id="search-content"></div>
-        <div class="container mt-3" id="recipes-list-content"></div>
-        <div class="container" id="recipe-detailed-content"></div>
-
-        <div id="navigation-container">
-            <div class="text-center" id="search-navigation" style="display:none">
-                <a href="/recipes"><button type="button" class="btn btn-danger">Search</button></a>
-            </div>
-            <div class="text-center" id="login-navigation">
+            </form>
+            <div class="text-center mt-4" id="login-navigation">
                 <a href="/search"><h5>Go to search</h5></a>
             </div> 
         </div>
 
-
         <!-- To handle SPA -->
         <script src="spa-scripts/jquery/dist/jquery.min.js"></script>
-        <script src="spa-scripts/axios/dist/axios.min.js"></script>
         <script src="spa-scripts/handlebars/dist/handlebars.min.js"></script>
         <script src="spa-scripts/vanilla-router/dist/vanilla-router.min.js"></script>
-        
-
+        <script src="js/bootstrap-input-spinner.js" type="text/javascript"></script>
 
         <!-- Core firebase -->
         <script src="/__/firebase/6.1.0/firebase-app.js"></script>
@@ -88,18 +77,43 @@
         <script src="js/favorites.js" type="text/javascript"></script> 
 
         <!-- Handle Bar templates -->
-
+        
+        <!--- Login template -->
+        <script id="login" type="text/x-handlebars-template">
+        <div class="container mt-3 mb-3" id="content-container">
+            <h2 class="text-center">Chef - discover your taste!</h2><br>
+            <form id="loginForm" action="search.html">
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="pwd">Password:</label>
+                    <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd">
+                </div>
+                <div class="container pl-0">
+                <button type="button" class="btn btn-primary mb-2" onclick="register()">Register</button>
+                <button type="button" class="btn btn-primary mb-2" onclick="signIn()">Sign In</button>
+                <button type="button" class="btn btn-primary mb-2" onclick="signInWithFacebook()" id="facebook-button">
+                    <i class="fab fa-facebook-f"></i>
+                    Sign in with facebook</button>
+                </div>    
+            </form>
+            <div class="text-center mt-4" id="login-navigation">
+                <a href="/search"><h5>Go to search</h5></a>
+            </div>
+        </script>    
         <!-- Search -->
         <script id="search" type="text/x-handlebars-template">
         <div class="container">
-            <img id="chef-main-search-logo" src="image-res/chef_logo_v2.svg" class="mx-auto d-block mb-3">
+            <img id="chef-main-search-logo" src="image-res/chef_logo_v2.svg" class="mx-auto d-block mb-3 img-fluid">
             <div class="jumbotron">
                 <div class="row">
                     <div class="col-9">
                         <input type="text" class="form-control" id="ingredients-add" placeholder="Provide ingredients" />
                     </div>
-                    <div class="col-3 align-self-center">
-                        <i class="fas fa-plus fa-2x" onclick="addIngredient()" style="color: red; margin-left: 20px"></i>
+                    <div class="col-3 text-center">
+                        <i class="fas fa-plus fa-2x" onclick="addIngredient()"></i>
                     </div>
                 </div>
                 <div class="row">
@@ -107,13 +121,24 @@
                     </div>  	
                 </div>  
             </div>
-            <div class="container">
-                <label for="ingredients-limit">Maximum number of ingredients:&nbsp;</label>
-                <input type="number" id="ingredients-limit" name="ingredients-limit" min="2" max="15">
+            <div class="row">
+                <div class="col-6 text-center">
+                    <label for="ingredients-limit">Maximum number of ingredients:&nbsp;</label>
+                </div>    
+                <div class="col-6">
+                    <input type="number" id="ingredients-limit" name="ingredients-limit" min="2" max="15">
+                </div>
+            </div>  
+             <div class="row mb-3">
+                <div class="col-6 text-center">
+                    <label for="preparation-time">Maximum Preparation time[min]:&nbsp;</label>
+                </div>
+                <div class="col-6">
+                    <input type="number" id="preparation-time" name="preparation-time" min="10" max="120" step="10">
+                </div>   
             </div>
-            <div class="container">
-                <label for="preparation-time">Maximum Preparation time[min]:&nbsp;</label>
-                <input type="number" id="preparation-time" name="preparation-time" min="10" max="120" step="10">
+            <div class="text-center" id="search-navigation mt-3">
+                <a href="/recipes"><button type="button" class="btn btn-danger">Search</button></a>
             </div>
         </div>
         </script>
@@ -131,7 +156,7 @@
         <!-- Recipese list item -->
         <script id="recipes-list-item" type="text/x-handlebars-template">
             <div class="media border p-3 mt-3">
-                <img src="{{imageURL}}" alt="Recipe image" class="mr-3 rounded" style="width:80px;">
+                <img src="{{imageURL}}" alt="Recipe image" class="mr-3 rounded">
                 <div class="media-body align-self-center">
                     <a href="/recipe-details"><h4>{{label}}</h4></a>
                 </div>
@@ -143,11 +168,11 @@
         <script id="recipe-details" type="text/x-handlebars-template">
         <div class="container mt-3 mb-5">
             <div class="row border-bottom">
-                <div class="col-3 p-3">
+                <div class="col-sm-3 p-3">
                     <img src="{{imageURL}}" alt="Recipe image" class="mr-3 rounded" style="width:100%;">
             </div>
-            <div class="col-9 p-3">
-            <h4 class="display-4" style="font-size: 40px;" >{{label}}</h4>
+            <div class="col-sm-9 p-3">
+            <h2 class="recipe-title">{{label}}</h2>
             </div>  
             </div>
             <div class="container mt-3 justify-content-start">
@@ -157,8 +182,8 @@
                 <li class="list-group-item">{{this}}</li>
                 {{/each}}
             </ul>           
-            <a href="{{sourceURL}}" style="font-size: 20px">Preparation details</a>
-            <i id="add-to-favorites" class="fas fa-heart fa-2x ml-3" style="color: crimson" data-toggle="tooltip" title="Add to favorites" ></i>
+            <a href="{{sourceURL}}" class="preparation-link">Preparation details</a>
+            <i id="add-to-favorites" class="fas fa-heart fa-2x ml-3" data-toggle="tooltip" title="Add to favorites" ></i>
             </div>
             </div> 
         </script>

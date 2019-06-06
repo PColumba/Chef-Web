@@ -9,8 +9,8 @@ and open the template in the editor.
 */
 
 #chef-main-search-logo {
-    width: 250px;
-    height: 250px;
+    max-width: 250px;
+    max-height: 250px;
 }
 
 #facebook-button{
@@ -20,3 +20,23 @@ and open the template in the editor.
 .fab.fa-facebook-f{
     color: white
 }
+
+.fas.fa-plus {
+    color: red
+}
+
+.fas.fa-heart{
+    color: crimson
+}
+img.mr-3.rounded {
+    width: 80px
+}
+
+.recipe-title{
+    font-weight: 300;
+    line-height: 1.2;
+}
+.preparation-link{
+    font-size: 20px;
+}
+
