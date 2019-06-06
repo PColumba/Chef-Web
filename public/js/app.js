@@ -5,6 +5,15 @@ const app_id = "a22ced66";
 var ingredientsList = [];
 var recipesList = [];
 var pickedIndex;
+var historyArr = [];
+
+function pausecomp(millis)
+{
+    var date = new Date();
+    var curDate = null;
+    do { curDate = new Date(); }
+    while(curDate-date < millis);
+}
 
 class Recipe{
     constructor(label, imageURL, sourceURL, ingredients){
@@ -34,18 +43,68 @@ window.addEventListener('load', () => {
     const navigationContainer = $('#navigation-container');
     const searchView = Handlebars.compile($('#search').html());
     const recipesListView = Handlebars.compile($('#recipes-list').html());
+    const favoritesListView = Handlebars.compile($('#recipes-favorites').html());
     const recipesListItem = Handlebars.compile($('#recipes-list-item').html());
     const recipeDetailsView = Handlebars.compile($('#recipe-details').html());
-
+    
+    
     router.add('/login.html', () => {
-        ;
+        searchContent.hide();
+        loginContent.show();
+        navigationContainer.find('#search-navigation').hide();
+        navigationContainer.find('#login-navigation').show(); 
+        historyArr.push('/login.html')
     });
+    
+    router.add('/back', ()=> {
+        console.log(historyArr);
+        if(historyArr.length <= 1)
+            return;
+        historyArr.pop();
+        router.navigateTo(historyArr.pop());
+    })
     
     router.add('/search', () => { 
         navigationContainer.find('#login-navigation').hide();
         navigationContainer.find('#search-navigation').show();
         loginContent.hide(); 
         searchContent.html(searchView()).show();
+        historyArr.push('/search');
+    });
+    
+    router.add('/favorites',() => {
+     
+        var currUser = firebase.auth().currentUser;
+        if (currUser === null) {
+            alert("Sign in to view favorites")
+            router.navigateTo("/login.html");
+            return;
+        }   
+        
+        navigationContainer.hide();
+        loginContent.hide();
+        searchContent.hide();
+        recipeDetailedContent.hide();
+        recipesListContent.html(favoritesListView());
+
+        var db = firebase.firestore();
+        db.collection("users").doc(currUser.uid).get().then((ds) => {
+            if (ds.exists) {
+                let favoritesList = ds.get('recipes')
+                favoritesList.forEach((recipe) => {
+                    let context = {label: recipe.label, imageURL: recipe.imageURL};
+                    let html = recipesListItem(context);
+                    recipesListContent.append(html);
+                })
+                recipesList = favoritesList;
+                recipesListContent.find('a').on('click', aOverrideRecipe);
+            } else{
+                recipesListContent.append("<p class=\"mt-3 text-center\">You do not have any favorite recipes</p>");
+            }
+        }).catch((error) => {
+            alert("Upps Something went wrong: " + error);
+        }); 
+        historyArr.push('/favorites');
     });
 
     router.add('/recipes', () => {
@@ -65,7 +124,7 @@ window.addEventListener('load', () => {
             
         let searchURL = baseURL + encodeQueryData(urlParams);
     
-        recipesListContent.append(recipesListView());
+        recipesListContent.html(recipesListView());
        
         let xmlhttp = new XMLHttpRequest();
 
@@ -95,7 +154,7 @@ window.addEventListener('load', () => {
         
         searchContent.hide();
         navigationContainer.find('#search-navigation').hide();
-  
+        historyArr.push('/recipes');
     });
 
     router.add('/recipe-details', () => {
@@ -104,6 +163,7 @@ window.addEventListener('load', () => {
         imageURL: recipesList[pickedIndex-1].imageURL, ingredients: recipesList[pickedIndex-1].ingredientsList};
         recipeDetailedContent.html(recipeDetailsView(context)).show();
         recipeDetailedContent.find('#add-to-favorites').on('click', function(){addToFavorites(recipesList[pickedIndex-1])})
+        historyArr.push('/recipes-details');
         //code here
     });
 
@@ -117,7 +177,8 @@ window.addEventListener('load', () => {
     //add link overrides
     navigationContainer.find('#login-navigation').on('click', aOverride);
     navigationContainer.find('#search-navigation').on('click', aOverride);
-    
+    $('#back-button').on('click', aOverride);
+    $('#show-favorites').on('click', aOverride);
 });
 
 function ingredient(value){
@@ -169,9 +230,13 @@ function aOverride(event) {
     // Block browser page load
     event.preventDefault();
     // Highlight Active Menu on Click
-    const target = $(event.target.parentElement);
-    $('.item').removeClass('active');
-    target.addClass('active');
+    let target
+    if($(event.target).is('a'))
+        target = $(event.target);
+    else
+        target = $(event.target.parentElement);
+    //$('.item').removeClass('active');
+    //target.addClass('active');
 
     // Navigate to clicked url
     const href = target.attr('href');

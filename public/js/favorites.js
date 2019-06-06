@@ -23,9 +23,9 @@ function addToFavorites(recipe){
         }).catch((error) => {
             console.log("Upps something went wrong" + error);
         });
-    }    
-    
+    }     
 }
+
 
 
 
