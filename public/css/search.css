@@ -12,3 +12,11 @@ and open the template in the editor.
     width: 250px;
     height: 250px;
 }
+
+#facebook-button{
+  background-color: #4C69BA;
+}
+
+.fab.fa-facebook-f{
+    color: white
+}

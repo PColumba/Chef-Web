@@ -18,6 +18,12 @@
     },{
       "source": "/",
       "destination": "/login.html"         
+    },{
+      "source": "/favorites",
+      "destination": "/login.html"         
+    },{
+      "source": "/back",
+      "destination": "/login.html"         
     }]
   }
 }
