@@ -16,7 +16,7 @@ Chef-Web app was developed by:
 
 See for yourself:
 
-![Chef android login](/images/login.png)
-![Chef android search](/images/search.png)
-![Chef android recipe](/images/recipe.png)
+![Chef-Web login](/images/login.PNG)
+![Chef-Web search](/images/search.PNG)
+![Chef-Web recipe](/images/recipe.PNG)
 
