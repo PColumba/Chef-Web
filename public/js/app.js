@@ -7,14 +7,6 @@ var recipesList = [];
 var pickedIndex;
 var historyArr = [];
 
-function pausecomp(millis)
-{
-    var date = new Date();
-    var curDate = null;
-    do { curDate = new Date(); }
-    while(curDate-date < millis);
-}
-
 class Recipe{
     constructor(label, imageURL, sourceURL, ingredients){
         this.label = label;
@@ -35,6 +27,24 @@ const router = new Router({
     mode: 'history'
 });
 
+
+function updateHistory(path){
+    let len = historyArr.length;
+    if(len == 0)
+        historyArr.push(path);  
+    //if path is already at end of list don't add it
+    else if(historyArr[len-1] == path)
+        return;
+    //if you path is a login screen, clear history
+    else if(path == '/login.html'){
+        historyArr = []
+        historyArr.push(path);
+    }
+    else{
+        historyArr.push(path);
+    }
+}
+
 window.addEventListener('load', () => {
     const contentContainer = $('#content-container');
     const loginView = Handlebars.compile($('#login').html());
@@ -47,11 +57,10 @@ window.addEventListener('load', () => {
     router.add('/login.html', () => {
         contentContainer.html(loginView());
         contentContainer.find('a').on('click',aOverride);
-        historyArr.push('/login.html')
+        updateHistory('/login.html')
     });
     
     router.add('/back', ()=> {
-        console.log(historyArr);
         if(historyArr.length <= 1)
             return;
         historyArr.pop();
@@ -65,7 +74,7 @@ window.addEventListener('load', () => {
         contentContainer.html(searchView()).show();
         contentContainer.find('a').on('click',aOverride);
         contentContainer.find("input[type='number']").inputSpinner()
-        historyArr.push('/search');
+        updateHistory('/search');
     });
     
     router.add('/favorites',() => {
@@ -96,7 +105,7 @@ window.addEventListener('load', () => {
         }).catch((error) => {
             alert("Upps Something went wrong: " + error);
         }); 
-        historyArr.push('/favorites');
+        updateHistory('/favorites');
     });
 
     router.add('/recipes', () => {
@@ -143,7 +152,7 @@ window.addEventListener('load', () => {
                     contentContainer.append(html);
                 })
                 contentContainer.find('a').on('click', aOverrideRecipe);
-                historyArr.push('/recipes');
+                updateHistory('/recipes');
             }    
         };
         xmlhttp.open('GET',searchURL,true);
@@ -155,7 +164,7 @@ window.addEventListener('load', () => {
         imageURL: recipesList[pickedIndex-1].imageURL, ingredients: recipesList[pickedIndex-1].ingredientsList};
         contentContainer.html(recipeDetailsView(context)).show();
         contentContainer.find('#add-to-favorites').on('click', function(){addToFavorites(recipesList[pickedIndex-1])})
-        historyArr.push('/recipes-details');
+        updateHistory('/recipes-details');
         //code here
     });
 
