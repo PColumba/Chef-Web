@@ -2,11 +2,13 @@
 
 **Chef-Web** is a web app that helps you find recipes for
 ingredients you already have thus helping your fridge stay clean (and it
-can get very messy at times).
+can get very messy at times). 
 
 Chef-Web let's you:
 * Search for recipes based on ingredients you provide
 * Register an account and add favorite recipes
+
+[Visit Chef-Web](https://chef-93062.firebaseapp.com)
 
 Chef-Web app was developed by:
 * Paweł Gołąb - 202655, KrZZIs3011 (team lead)
